@@ -28,7 +28,8 @@ def search_jobs_with_gemini(query):
                 "summarize the results in a clear and concise manner, and provide actionable insights. "
                 "Focus on delivering accurate, up-to-date job listings and highlight key details such as "
                 "job title, company name, location, salary range, and application links. "
-                "Ensure that you include direct links to the job postings for each position."
+                "Ensure that you include direct links to the job postings for each position. "
+                "Avoid discussing or including any unrelated topics; your sole focus should be on job postings."
             ),
             tools=[google_search_tool],
             response_modalities=["TEXT"],
