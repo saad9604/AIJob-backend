@@ -1,10 +1,10 @@
 import time
-from flask import Flask, jsonify, request
+from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 
-from duckduckgo import generate_three_queries, test_duckduckgo_search
+from duckduckgo import format_duckduckgo_response, generate_three_queries, test_duckduckgo_search
 from gemini import search_jobs_with_gemini
-
+from google_search import googlesearch_function
 app = Flask(__name__)
 CORS(app)
 @app.route('/', methods=['GET'])
@@ -42,6 +42,21 @@ def duck_gemini_search():
         return jsonify({"error": str(e)}), 500
 
 
+
+@app.route('/google-search', methods=['POST'])
+def search_google():
+    data = request.get_json()
+    query = data.get('query', '')
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
+
+    try:
+        response_texts = googlesearch_function(query)
+        print(type(response_texts))
+        format_response = format_duckduckgo_response(response_texts)
+        return jsonify({"results": format_response})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
 
 

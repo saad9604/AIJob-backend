@@ -32,17 +32,20 @@ def format_duckduckgo_response(query_results):
 
     response = client.models.generate_content(
         model="gemini-2.0-flash",
-        contents="Explain how AI works in a few words",
+        contents=f"Given the following search results: {query_results}\n\n",
         config=GenerateContentConfig(
-             
             system_instruction=(
-        f"Given the input query: {query_results}, generate three different search queries for DuckDuckGo. "
-        "Return the response as a JSON object in the following format: "
-        "{ 'queries': ['query1', 'query2', 'query3'] }. "
-        "Format the response to exclude any objects that contain unrelated links, such as blogs, news articles, or promotional content. "
-        "Only include objects that have direct links to job postings, career pages, or recruitment platforms."
-)
-
+                "You are an expert job search assistant. "
+                "Sort the job search results so that links to direct job application pages or official open positions are at the top. "
+                "Links that redirect to job aggregators, review sites, or do not lead directly to a job application (such as Turing, Glassdoor, or general listings) should be placed at the end. "
+                "Return the sorted results as a JSON array, where each object has the following fields: "
+                "\"job description\", \"company\", and \"salary range\". "
+                "For each job, extract and fill these fields as accurately as possible from the search results. "
+                "If any field is missing, leave it as an empty string. "
+                "Do not add any extra commentary or explanation. "
+                "Example output:\n"
+                "[{\"job description\": \"xxx\", \"company\": \"xxx\", \"salary range\": \"xxx\",\"Location\": \"xxx\", \"Apply link\": \"xxx\"}]"
+            )
         )
     )
     print(response.text)
